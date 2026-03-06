@@ -4,6 +4,7 @@ const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const TaskRoutes = require('./routes/TaskRoutes');
+const compression = require('compression');
 const cors = require('cors');
 require("dotenv").config();
 
@@ -22,6 +23,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type","Authorization"]
 }));
 app.use(express.json());
+app.use(compression());
 
 const PORT = process.env.PORT || 4000;
 connectDB();
