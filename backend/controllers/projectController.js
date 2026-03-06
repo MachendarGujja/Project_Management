@@ -30,9 +30,9 @@ const DisplayProjects = async (req, res) => {
             projects = await Project.find({ owner: req.user._id });
         }
 
-        res.status(200).json(projects);
+        return res.status(200).json(projects);
     } catch (err) {
-        res.status(500).json({ Error: err.message });
+        return res.status(500).json({ Error: err.message });
     }
 };
 
