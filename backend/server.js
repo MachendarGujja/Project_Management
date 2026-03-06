@@ -10,9 +10,16 @@ require("dotenv").config();
 // Temporary fix for casing conflict
 // console.log('Starting server...');
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://project-management-pink-five.vercel.app"
+]
+
 const app = express();
 app.use(cors({
-    origin: "*"
+    origin: allowedOrigins,
+    methods: ["GET","POST","PUT","DELETE"],
+    allowedHeaders: ["Content-Type","Authorization"]
 }));
 app.use(express.json());
 
