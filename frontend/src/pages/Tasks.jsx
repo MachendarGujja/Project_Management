@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../api/axios';
 import {useState, useEffect, useCallback} from 'react';
 import {authManage} from '../context/AuthContext';
 import {Link, useParams} from 'react-router-dom'
@@ -40,7 +41,7 @@ const Tasks = () => {
 
     const fetchTasks = useCallback(async() => {
         try {
-           const res = await axios.get(`http://localhost:4000/api/tasks/${projectId}`,{
+           const res = await API.get(`/tasks/${projectId}`,{
             headers : {
                 Authorization : `Bearer ${token}`
             }
@@ -67,7 +68,7 @@ const Tasks = () => {
             return;
         }
         try {
-        const res = await axios.post(`http://localhost:4000/api/tasks/${projectId}`,{
+        const res = await API.post(`/tasks/${projectId}`,{
             title : taskData.title,
             description : taskData.description,
             status : taskData.status
@@ -98,7 +99,7 @@ const Tasks = () => {
     const submitTaskFun = async() => {
         // console.log(taskValue);
         try {
-        const res = await axios.put(`http://localhost:4000/api/tasks/${edit}`,{
+        const res = await API.put(`/tasks/${edit}`,{
             title : taskValue
         },{
             headers : {
@@ -116,7 +117,7 @@ const Tasks = () => {
     const handleStatus = async(v,id) => {
         // console.log(v);
         // setStatusValue(e.target.value);
-        const res = await axios.put(`http://localhost:4000/api/tasks/${id}`,{
+        const res = await API.put(`/tasks/${id}`,{
             status : v
         },{
             headers : {
@@ -127,7 +128,7 @@ const Tasks = () => {
     }
 
     const handleDeleteFun = async(id) => {
-        const res = await axios.delete(`http://localhost:4000/api/tasks/${id}`,{
+        const res = await API.delete(`/tasks/${id}`,{
             headers : {
                 Authorization : `Bearer ${token}`
             }

@@ -11,7 +11,9 @@ require("dotenv").config();
 // console.log('Starting server...');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "*"
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 4000;

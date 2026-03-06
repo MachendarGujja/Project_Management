@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../api/axios';
 import {useState,useEffect,useCallback} from 'react';
 import {authManage} from '../context/AuthContext';
 import {Link} from 'react-router-dom';
@@ -24,12 +25,12 @@ const adminDashboard = () => {
     height: 200,
     hideLegend: true,
     };
-    const api = axios.create({
-        baseURL : "http://localhost:4000/api"
-    });
+    // const api = axios.create({
+    //     baseURL : "http://localhost:4000/api"
+    // });
 
     const fetchUsers = useCallback(async()=>{
-        const res = await api.get("/admin/users",{
+        const res = await API.get("/admin/users",{
             headers : {
                 Authorization : `Bearer ${token}`
             }

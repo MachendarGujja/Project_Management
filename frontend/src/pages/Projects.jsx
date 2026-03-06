@@ -1,7 +1,8 @@
 import {authManage} from '../context/AuthContext';
 import {useState, useEffect, useCallback} from 'react';
 import {Link,useParams} from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../api/axios';
 import DeleteIcon  from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -31,7 +32,7 @@ const Projects = () => {
             alert("Enter Name");
             return; 
         }
-        const res = await axios.post("http://localhost:4000/api/projects",formData, {
+        const res = await API.post("/projects",formData, {
             headers : {
                 Authorization : `Bearer ${token}`
             }
@@ -42,7 +43,7 @@ const Projects = () => {
     }
     const displayProjects = async() => {
         try {
-        const resData = await axios.get("http://localhost:4000/api/projects/",{
+        const resData = await API.get("/projects/",{
             headers : {
                 Authorization : `Bearer ${token}`
             }
@@ -58,7 +59,7 @@ const Projects = () => {
 
     const displayUserProjects = async() => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/projects/${userId}`,{
+            const res = await API.get(`/projects/${userId}`,{
                 headers : {
                     Authorization : `Bearer ${token}`
                 }
@@ -77,7 +78,7 @@ const Projects = () => {
     }
     const handleSave = async(id) => {
         try {
-        const res = await axios.put(`http://localhost:4000/api/projects/${id}`,{name : editname},{
+        const res = await API.put(`/projects/${id}`,{name : editname},{
             headers : {
                 Authorization : `Bearer ${token}`
             }
@@ -93,7 +94,7 @@ const Projects = () => {
 
     const handleDelete = async(id) => {
         try {
-        await axios.delete(`http://localhost:4000/api/projects/${id}`,{
+        await API.delete(`/projects/${id}`,{
             headers : {
                 Authorization : `Bearer ${token}`
             }
@@ -108,7 +109,7 @@ const Projects = () => {
 
     const handlingStatus = async(id,v) => {
         try {
-            const res = await axios.put(`http://localhost:4000/api/projects/${id}`,{ status : v},{
+            const res = await API.put(`/projects/${id}`,{ status : v},{
                 headers : {
                     Authorization : `Bearer ${token}`
                 }

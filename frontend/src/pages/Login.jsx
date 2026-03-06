@@ -1,5 +1,6 @@
 import {useState} from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../api/axios';
 import {Link} from 'react-router-dom';
 import {authManage} from "../context/AuthContext";
 import {Navigate, useNavigate} from "react-router-dom";
@@ -16,7 +17,7 @@ const Login = () => {
             alert("Fill out details");
         }
         else {
-            const res = await axios.post("http://localhost:4000/api/auth/login", {
+            const res = await API.post("/auth/login", {
                 email : userEmail,
                 password : userPwd
             })

@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import API from '../api/axios';
 import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 
@@ -22,7 +23,7 @@ const Signup = () => {
             alert("Fill out all the fields");
         }
         else {
-            await axios.post("http://localhost:4000/api/auth/signup",user);
+            await API.post("/auth/signup",user);
             alert("User Created Successfully");
             navigate("/login")
         }
