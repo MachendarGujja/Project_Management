@@ -28,9 +28,11 @@ app.use(compression());
 const PORT = process.env.PORT || 4000;
 connectDB();
 
-// app.get('/', (req,res) => {
-//     res.send("Home Page")
-// });
+// for health check
+app.get('/', (req,res) => {
+    res.send("Project Management API is running");
+});
+
 app.use("/api/auth",authRoutes);
 
 app.use("/api/admin",adminRoutes);
