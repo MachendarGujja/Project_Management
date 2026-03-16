@@ -1,95 +1,118 @@
-const Project = require('../models/Project');
+const Project = require("../models/Project");
 
-const CreateProjects = async(req,res) => {
-    const {name,description,status} = req.body;
-    try {
-        const verifyName = await Project.findOne({name, owner: req.user.id});
-        if(verifyName) {
-            return res.status(400).json({msg : "Project Name already exsisted"});
-        }
-        const newProject = await Project.create({
-            name,
-            description,
-            status,
-            owner : req.user.id
-        });
-        res.status(201).json(newProject);
+const CreateProjects = async (req, res) => {
+  const { name, description, status, owner } = req.body;
+
+  try {
+    const ownerId =
+      req.user.role === "admin" && owner ? owner : req.user.id;
+
+    const verifyName = await Project.findOne({
+      name: name.trim(),
+      owner: ownerId,
+    });
+
+    if (verifyName) {
+      return res.status(400).json({ msg: "Project name already existed" });
     }
-    catch(err) {
-        res.status(500).json({Error : err.message});
-    }
+
+    const newProject = await Project.create({
+      name: name.trim(),
+      description,
+      status,
+      owner: ownerId,
+    });
+
+    return res.status(201).json(newProject);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 
 const DisplayProjects = async (req, res) => {
-    try {
-        let projects;
+  try {
+    let ownerId;
 
-        if (req.user.role === "admin") {
-            projects = await Project.find({ owner: req.params.userId });
-        } else {
-            projects = await Project.find({ owner: req.user._id });
-        }
-
-        res.status(200).json(projects);
-    } catch (err) {
-        res.status(500).json({ Error: err.message });
+    if (req.user.role === "admin" && req.params.userId) {
+      ownerId = req.params.userId;
+    } else {
+      ownerId = req.user.id;
     }
+
+    const projects = await Project.find({ owner: ownerId }).sort({
+      createdAt: -1,
+    });
+
+    return res.status(200).json(projects);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 
-// const DisplayOneProject = async(req,res) => {
-//     try {
-//         const project = await Project.findById(req.params.id);
-//         if(!project) {
-//             return res.status(404).json({message : "project not found"});
-//         }
-//         if(project.owner.toString() !== req.user.id) {
-//             return res.status(403).json({message : "Not allowed"});
-//         }
-//         res.status(200).json(project);
-//     }
-//     catch(err){
-//         res.status(500).json({message : err.message});
-//     }
-// }
+const EditProjects = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
 
-const EditProjects = async(req,res) => {
-    try {
-        const project = await Project.findById(req.params.id);
-        if(!project) {
-            res.status(404).json({message: "project not found"});
-        }
-        if(project.owner.toString() !== req.user.id && req.user.role !== "admin") {
-            res.status(403).json({message: "Not Allowed"});
-        }
-        if(req.body.name !== undefined){
-            project.name = req.body.name || project.name;
-        }
-        if(req.body.status !== undefined) {
-            project.status = req.body.status || project.status;
-        }
-        project.save();
-        res.json(project);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
-    catch(err) {
-        res.status(500).json({Error : err.message});
-    }
-}
 
-const DeleteProjects = async(req,res) => {
-    try {
-        const projectData = await Project.findById(req.params.id);
-        if(!projectData) {
-            res.status(404).json({message: "project not found"});
-        }
-        if(projectData.owner.toString() !== req.user.id && req.user.role !== "admin") {
-            res.status(403).json({message: "not allowed"});
-        }
-        await projectData.deleteOne();
-        res.status(200).json({message: "project deleted successfully"});
+    if (
+      project.owner.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({ message: "Not allowed" });
     }
-    catch(err) {
-        res.status(500).json({message: err.message});
-    }
-}
 
-module.exports = {CreateProjects, DisplayProjects, EditProjects, DeleteProjects};
+    if (req.body.name !== undefined) {
+      project.name = req.body.name.trim();
+    }
+
+    if (req.body.description !== undefined) {
+      project.description = req.body.description;
+    }
+
+    if (req.body.status !== undefined) {
+      project.status = req.body.status;
+    }
+
+    await project.save();
+
+    return res.status(200).json(project);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+const DeleteProjects = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    if (
+      project.owner.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    await project.deleteOne();
+
+    return res.status(200).json({
+      message: "Project deleted successfully",
+      deletedId: req.params.id,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = {
+  CreateProjects,
+  DisplayProjects,
+  EditProjects,
+  DeleteProjects,
+};
