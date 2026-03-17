@@ -2,7 +2,8 @@
 import API from '../api/axios';
 import {useState, useEffect, useCallback} from 'react';
 import {authManage} from '../context/AuthContext';
-import {Link, useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom';
+import toast from "react-hot-toast";
 import DeleteIcon  from '@mui/icons-material/Delete';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import OfflinePinIcon from '@mui/icons-material/OfflinePin';
@@ -22,6 +23,7 @@ const Tasks = () => {
     })
     const [edit, setEdit] = useState(null);
     const [taskValue, setTaskValue] = useState("");
+    const [loading, setLoading] = useState(false);
     // const [statusValue, setStatusValue] = useState("");
 
     // const projectNameFunction = async() => {
@@ -41,6 +43,7 @@ const Tasks = () => {
 
     const fetchTasks = useCallback(async() => {
         try {
+            setLoading(true);
            const res = await API.get(`/tasks/${projectId}`,{
             headers : {
                 Authorization : `Bearer ${token}`
@@ -53,6 +56,9 @@ const Tasks = () => {
         catch(err) {
             console.log(err.message);
         }
+        finally {
+            setLoading(false);
+        }
     },[projectId,token]);
 
     const handleEditValues = (e) => {
@@ -64,10 +70,11 @@ const Tasks = () => {
     const TaskSubmitFunction = async(e) => {
         e.preventDefault();
         if(taskData.title === '' || taskData.description === ''){
-            alert("Enter Details of task");
+            toast.error("Enter Details of task");
             return;
         }
         try {
+        setLoading(true);
         const res = await API.post(`/tasks/${projectId}`,{
             title : taskData.title,
             description : taskData.description,
@@ -78,7 +85,7 @@ const Tasks = () => {
             }
         });
         setTasks((prev)=> [...prev, res.data]);
-        alert("task created successfully");
+        toast.success("task created successfully");
         setTaskData({
             title:"",
             description:"",
@@ -88,6 +95,9 @@ const Tasks = () => {
     catch(err) {
         console.log(err.message);
     }
+    finally {
+            setLoading(false);
+        }
     }
 
     const handleEditFun = (data) => {
@@ -99,6 +109,7 @@ const Tasks = () => {
     const submitTaskFun = async() => {
         // console.log(taskValue);
         try {
+        setLoading(true);
         const res = await API.put(`/tasks/${edit}`,{
             title : taskValue
         },{
@@ -112,11 +123,16 @@ const Tasks = () => {
     catch(err) {
         console.log(err.message);
     }
+    finally {
+            setLoading(false);
+        }
     }
 
     const handleStatus = async(v,id) => {
         // console.log(v);
         // setStatusValue(e.target.value);
+        try {
+        setLoading(true);
         const res = await API.put(`/tasks/${id}`,{
             status : v
         },{
@@ -126,14 +142,30 @@ const Tasks = () => {
         });
         setTasks((prev)=>prev.map((d)=>d._id === id ? res.data:d));
     }
+    catch(err) {
+        console.log(err.message);
+    }
+    finally {
+            setLoading(false);
+        }
+    }
 
     const handleDeleteFun = async(id) => {
+        try {
+        setLoading(true);
         const res = await API.delete(`/tasks/${id}`,{
             headers : {
                 Authorization : `Bearer ${token}`
             }
         });
         setTasks((prev)=>prev.filter((d)=>d._id !== id));
+        }
+        catch(err) {
+        console.log(err.message);
+    }
+    finally {
+            setLoading(false);
+        }
     }
 
     useEffect(()=>{
@@ -169,7 +201,12 @@ const Tasks = () => {
             </div>
             <ul className="w-[40%] flex items-start flex-col">
                 <h2 className="font-semibold text-lg mb-3 capitalize">{`${projectName?.name} Tasks :`}</h2>
-                {tasks.length > 0?(
+                {loading?
+                (<div className="flex justify-center items-center h-96 w-full">
+                <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                ):
+                (tasks.length > 0?(
                     tasks.map((data)=>(
                         <li key={data._id} className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 rounded-xl
                         ${data.status === "todo" && "bg-red-100/50"}
@@ -201,7 +238,7 @@ const Tasks = () => {
                 ):(
                         <p>No Tasks</p>
                     )
-                }
+                )}
             </ul>
             </div>
         )

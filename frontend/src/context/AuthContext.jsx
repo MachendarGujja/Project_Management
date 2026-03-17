@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import toast from 'react-hot-toast';
 
 const UserContext = createContext();
 
@@ -18,6 +19,7 @@ export const ProjectProvider = ({ children }) => {
 
         setToken(jwttoken);
         setUser(userData);
+        toast.success("Login Successfully");
     };
 
     const logoutFn = () => {
@@ -25,6 +27,7 @@ export const ProjectProvider = ({ children }) => {
         localStorage.removeItem("user");
         setToken(null);
         setUser(null);
+        toast.error("Logout Successfully");
     };
 
     return (

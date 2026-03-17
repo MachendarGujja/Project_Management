@@ -2,6 +2,7 @@
 import API from '../api/axios';
 import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import toast from "react-hot-toast";
 
 const Signup = () => {
     const [user, setUser] =  useState({
@@ -11,6 +12,7 @@ const Signup = () => {
         password:""
     })
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const inputFunction = (e) => {
         setUser({...user,[e.target.name]:e.target.value});
@@ -20,17 +22,32 @@ const Signup = () => {
         e.preventDefault();
         // console.log(user);
         if(user.name === '' || user.email === '' || user.password === '') {
-            alert("Fill out all the fields");
+            toast.error("Fill out all the fields");
         }
         else {
+            try {
+            setLoading(true);
             await API.post("/auth/signup",user);
-            alert("User Created Successfully");
+            toast.success("User Created Successfully");
             navigate("/login")
+            }
+            catch(err) {
+                console.log(err.message);
+            }
+            finally {
+                setLoading(false);
+            }
         }
     }
 
     return (
         <div className="h-screen w-screen bg-gray-300 flex flex-col items-center justify-center">
+            {loading?
+            (<div className="flex justify-center items-center h-96 w-full">
+            <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            )
+            :(<>
             <h3 className="pb-14 text-2xl font-semibold">Project Management</h3>
             <div className="flex flex-col items-start">
                 <h3 className="pb-3 text-lg">SignUp</h3>
@@ -50,6 +67,7 @@ const Signup = () => {
                 <Link to="/login" className="text-black font-semibold underline">Login</Link>
             </form>
             </div>
+            </>)}
         </div>
     )
 }

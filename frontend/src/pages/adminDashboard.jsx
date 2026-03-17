@@ -12,6 +12,7 @@ const adminDashboard = () => {
     const [projectsCount, setProjectsCount] = useState([]);
     const [tasksCount, setTasksCount] = useState([]);
     const {token,user,logoutFn} = authManage();
+    const [loading, setLoading] = useState(false);
     const completed = projectsCount.filter(p => p.status === "completed").length;
     const pending = projectsCount.filter(p => p.status === "pending").length;
     const inProgress = projectsCount.filter(p => p.status === "in-progress").length;
@@ -30,6 +31,8 @@ const adminDashboard = () => {
     // });
 
     const fetchUsers = useCallback(async()=>{
+        try {
+        setLoading(true);
         const res = await API.get("/admin/users",{
             headers : {
                 Authorization : `Bearer ${token}`
@@ -39,6 +42,13 @@ const adminDashboard = () => {
         setProjectsCount(res.data.projects);
         setTasksCount(res.data.tasks);
         // console.log(res.data);
+        }
+        catch(err) {
+        console.log(err.message);
+    }
+    finally {
+            setLoading(false);
+        }
     },[token])
 
     useEffect(()=> {
@@ -84,7 +94,12 @@ const adminDashboard = () => {
         </div>
         <div className="w-[50%] p-6 py-10">
         <h2 className="font-bold text-lg mb-4">Active Users :</h2>
-        {userlist.length === 0?
+        {loading?
+        (<div className="flex justify-center items-center h-96 w-full">
+        <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        ):
+        (userlist.length === 0?
         (<div className="font-semibold text-lg text-center">No Users</div>):
         (<>{userlist.map((data) => 
         <div key={data._id} className="text-sm w-[95%] font-medium flex items-center justify-between gap-x-3 my-3 h-16 bg-green-200 p-3 rounded-xl">
@@ -92,7 +107,7 @@ const adminDashboard = () => {
             <Link to={`/admin/users/${data._id}/projects`} className="p-1.5"><ArrowForwardIosIcon className="text-gray-700" /></Link>
         </div>
         )}</>)
-        }
+        )}
         </div>
         </div>
     )

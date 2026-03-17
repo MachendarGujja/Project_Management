@@ -1,6 +1,7 @@
 import { authManage } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import API from "../api/axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
@@ -12,6 +13,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from '@mui/icons-material/Close';
 
 const Projects = () => {
   const { token, user, logoutFn } = authManage();
@@ -31,6 +33,7 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const authHeader = {
     headers: {
@@ -44,6 +47,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
+      setLoading(true);
       const url =
         user?.role === "admin" ? `/projects/${userId}` : "/projects";
 
@@ -53,17 +57,21 @@ const Projects = () => {
     } catch (err) {
       console.log(err.response?.data || err.message);
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const submitFunction = async (e) => {
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      alert("Enter Project Name");
+      toast.error("Enter Project Name");
       return;
     }
 
     try {
+      setLoading(true);
       const payload =
         user?.role === "admin"
           ? { ...formData, owner: userId }
@@ -81,10 +89,13 @@ const Projects = () => {
         status: "pending",
       });
 
-      alert("Project Created");
+      toast.success("Project Created");
     } catch (err) {
-      alert(err.response?.data?.msg || "Failed to create project");
+      toast.error(err.response?.data?.msg || "Failed to create project");
       console.log(err.response?.data || err.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -97,11 +108,12 @@ const Projects = () => {
 
   const handleSave = async (id) => {
     if (!editname.trim()) {
-      alert("Enter Project Name");
+      toast.error("Enter Project Name");
       return;
     }
 
     try {
+      setLoading(true);
       const res = await API.put(
         `/projects/${id}`,
         {
@@ -120,28 +132,36 @@ const Projects = () => {
       setFilteredProjects(updatedProjects);
       setEdit(null);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update project");
+      toast.error(err.response?.data?.message || "Failed to update project");
       console.log(err.response?.data || err.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await API.delete(`/projects/${id}`, authHeader);
 
       const updatedProjects = projects.filter((p) => p._id !== id);
       setProjects(updatedProjects);
       setFilteredProjects(updatedProjects);
 
-      alert("Project deleted successfully");
+      toast.success("Project deleted successfully");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete project");
+      toast.error(err.response?.data?.message || "Failed to delete project");
       console.log(err.response?.data || err.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
   const handlingStatus = async (id, value) => {
     try {
+      setLoading(true);
       const res = await API.put(
         `/projects/${id}`,
         { status: value },
@@ -155,8 +175,11 @@ const Projects = () => {
       setProjects(updatedProjects);
       setFilteredProjects(updatedProjects);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update status");
+      toast.error(err.response?.data?.message || "Failed to update status");
       console.log(err.response?.data || err.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -172,6 +195,11 @@ const Projects = () => {
 
     setFilteredProjects(result);
   };
+
+  const clearFunction = () => {
+    setSearch("");
+    setFilteredProjects(projects);
+  }
 
   useEffect(() => {
     if (token && user) {
@@ -267,9 +295,32 @@ const Projects = () => {
                 className="rounded-xl h-10 capitalize w-72 ps-2 pe-16"
                 placeholder="Search"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setSearch(value);
+                    if(value.trim() === "") {
+                        setFilteredProjects(projects);
+                    }
+                }
+                }
+                onKeyDown={(e)=> {
+                    if(e.key === "Enter"){
+                      searchFunction()
+                    }
+                }
+                }
               />
-              <button
+              {
+                search.trim() !== "" &&
+                <button
+                type="button"
+                className="absolute top-1 right-12 rounded-xl h-8 px-3 text-gray-800 hover:text-red-600"
+                onClick={clearFunction} title="Clear"
+              >
+                <CloseIcon></CloseIcon>
+              </button>
+              }
+                <button
                 type="button"
                 className="absolute top-1 right-1 rounded-xl h-8 px-3 bg-gray-800 hover:bg-gray-700 text-white"
                 onClick={searchFunction}
@@ -278,13 +329,19 @@ const Projects = () => {
               </button>
             </div>
 
-            <button className="rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white">
+            <button  className="rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white">
               <FilterListIcon />
             </button>
+            
           </div>
         </div>
 
-        {filteredProjects.length > 0 ? (
+        {loading?
+        (<div className="flex justify-center items-center h-96 w-full">
+        <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        ):
+        (filteredProjects.length > 0 ? (
           filteredProjects.map((data) => (
             <li
               key={data._id}
@@ -418,7 +475,7 @@ const Projects = () => {
           ))
         ) : (
           <p>No Project</p>
-        )}
+        ))}
       </ul>
     </div>
   );

@@ -4,19 +4,23 @@ import API from '../api/axios';
 import {Link} from 'react-router-dom';
 import {authManage} from "../context/AuthContext";
 import {Navigate, useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
     const [userEmail, setUserEmail] = useState("");
     const [userPwd, setUserPwd] = useState("");
     const {token,loginFn} = authManage();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const submitFunction = async(e) => {
         e.preventDefault();
         if(userEmail === '' || userPwd === ''){
-            alert("Fill out details");
+            toast.error("Fill out details");
         }
         else {
+            try {
+            setLoading(true);
             const res = await API.post("/auth/login", {
                 email : userEmail,
                 password : userPwd
@@ -30,12 +34,24 @@ const Login = () => {
             } else if(role === "user") {
                 navigate("/");
             }
+            }
+            catch(err) {
+                console.log(err.message);
+            }
+            finally {
+                setLoading(false);
+            }
         }
     }
 
     return (
         <div className="h-screen w-screen bg-gray-200 flex flex-col items-center justify-center">
-            <h3 className="pb-14 text-2xl font-semibold">Project Management</h3>
+            {loading?
+            (<div className="flex justify-center items-center h-96 w-full">
+            <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            ):
+            (<><h3 className="pb-14 text-2xl font-semibold">Project Management</h3>
             <div className="flex flex-col items-start">
                 <h3 className="pb-3 text-lg">Login</h3>
             <form onSubmit={submitFunction} className="flex p-6 flex-col bg-gray-400 rounded-xl w-[500px]">
@@ -46,7 +62,8 @@ const Login = () => {
                 <button type="submit" className="rounded-xl h-10 w-full mb-1 bg-gray-800 hover:bg-gray-700 text-white">Submit</button>
                 <Link to="/signup" className="text-black font-semibold underline">Signup</Link>
             </form>
-            </div>
+            </div></>
+            )}
         </div>
     )
 }

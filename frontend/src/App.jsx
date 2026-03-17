@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Tasks from './pages/Tasks';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {Toaster} from 'react-hot-toast'; 
 import ProtectedRoutes from './components/ProtectedRoutes';
 import AdminRoute from './components/AdminRoute';
 
@@ -12,6 +13,18 @@ function App() {
   
   return (
     <BrowserRouter>
+      <Toaster position="top-center" 
+      toastOptions={{
+      duration: 3000,
+      style: {
+        background: "#1e2944ff",
+        color: "#fff",
+        borderRadius: "10px",
+        padding: "12px 16px",
+        minWidth: "400px",
+        minHeight: "40px"
+      }
+  }}/>
       <Routes>
         {/* User Routes */}
         <Route path="/" element={<ProtectedRoutes><Projects /></ProtectedRoutes>} />
