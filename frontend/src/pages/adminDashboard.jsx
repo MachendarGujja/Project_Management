@@ -102,9 +102,11 @@ const adminDashboard = () => {
         (userlist.length === 0?
         (<div className="font-semibold text-lg text-center">No Users</div>):
         (<>{userlist.map((data) => 
-        <div key={data._id} className="text-sm w-[95%] font-medium flex items-center justify-between gap-x-3 my-3 h-16 bg-green-200 p-3 rounded-xl">
+        <div key={data._id} className="text-sm my-3 h-16 bg-green-200 p-3 w-[90%] rounded-xl">
+            <Link to={`/admin/users/${data._id}/projects`} className="p-1.5 font-medium flex items-center justify-between gap-x-3">
             <p className="text-base font-semibold capitalize ps-4">{data.name}</p>
-            <Link to={`/admin/users/${data._id}/projects`} className="p-1.5"><ArrowForwardIosIcon className="text-gray-700" /></Link>
+            <ArrowForwardIosIcon className="text-gray-700" />
+            </Link>
         </div>
         )}</>)
         )}

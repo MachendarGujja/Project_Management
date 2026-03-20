@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="8" y="8" width="48" height="48" rx="10" fill="#DB6D1F"></rect>
+  
+  <!-- Checklist lines -->
+  <rect x="18" y="20" width="26" height="4" rx="2" fill="white"></rect>
+  <rect x="18" y="30" width="20" height="4" rx="2" fill="white"></rect>
+  <rect x="18" y="40" width="16" height="4" rx="2" fill="white"></rect>
+  
+  <!-- Check -->
+  <path d="M42 38 L48 44 L56 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
