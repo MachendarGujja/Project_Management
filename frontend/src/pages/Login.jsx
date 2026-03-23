@@ -5,6 +5,8 @@ import {Link} from 'react-router-dom';
 import {authManage} from "../context/AuthContext";
 import {Navigate, useNavigate} from "react-router-dom";
 import toast from "react-hot-toast";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const Login = () => {
     const [userEmail, setUserEmail] = useState("");
@@ -12,6 +14,7 @@ const Login = () => {
     const {token,loginFn} = authManage();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [showPswd, setShowPswd] = useState(false);
 
     const submitFunction = async(e) => {
         e.preventDefault();
@@ -58,7 +61,7 @@ const Login = () => {
                 <label htmlFor="email" className="mb-1 text-black">Email</label>
                 <input name="email" className="rounded-xl h-10 mb-3 w-full ps-2" placeholder="Enter Email" onChange={(e)=>setUserEmail(e.target.value)} />
                 <label htmlFor="password" className="mb-1 text-black">Password</label>
-                <input name="password" className="rounded-xl h-10 mb-8 w-full ps-2" type="password" placeholder="Enter Password" onChange={(e)=>setUserPwd(e.target.value)} />
+                <div className="relative"><input name="password" className="rounded-xl h-10 mb-8 w-full ps-2 pe-12" value={userPwd} type={showPswd?"text":"password"} placeholder="Enter Password" onChange={(e)=>setUserPwd(e.target.value)} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowPswd(!showPswd)}>{showPswd?<VisibilityIcon title="show" />:<VisibilityOffIcon title="hide" />}</button></div>
                 <button type="submit" className="rounded-xl h-10 w-full mb-1 bg-gray-800 hover:bg-gray-700 text-white">Submit</button>
                 <Link to="/signup" className="text-black font-semibold underline">Signup</Link>
             </form>

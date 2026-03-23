@@ -3,6 +3,8 @@ import API from '../api/axios';
 import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import toast from "react-hot-toast";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const Signup = () => {
     const [user, setUser] =  useState({
@@ -13,6 +15,7 @@ const Signup = () => {
     })
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [showPswd, setShowPswd] = useState(false);
 
     const inputFunction = (e) => {
         setUser({...user,[e.target.name]:e.target.value});
@@ -62,7 +65,7 @@ const Signup = () => {
                 <label htmlFor="email" className="mb-1 text-black">Email</label>
                 <input name="email" className="rounded-xl h-10 mb-3 w-full ps-2" placeholder="Enter Email" onChange={inputFunction} />
                 <label htmlFor="password" className="mb-1 text-black">Password</label>
-                <input name="password" className="rounded-xl h-10 mb-8 w-full ps-2" type="password" placeholder="Enter Password" onChange={inputFunction} />
+                <div className="relative"><input name="password" className="rounded-xl h-10 mb-8 w-full ps-2 pe-12" type={showPswd?"text":"password"} placeholder="Enter Password" onChange={inputFunction} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowPswd(!showPswd)}>{showPswd?<VisibilityIcon />:<VisibilityOffIcon />}</button></div>
                 <button type="submit" className="rounded-xl h-10 w-full bg-gray-800 hover:bg-gray-700 text-white mb-1">Submit</button>
                 <Link to="/login" className="text-black font-semibold underline">Login</Link>
             </form>

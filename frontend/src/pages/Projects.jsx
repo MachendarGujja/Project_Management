@@ -1,5 +1,5 @@
 import { authManage } from "../context/AuthContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import API from "../api/axios";
@@ -14,6 +14,9 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from '@mui/icons-material/Close';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const Projects = () => {
   const { token, user, logoutFn } = authManage();
@@ -34,6 +37,9 @@ const Projects = () => {
   const [search, setSearch] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [statusFilter, setStatusFilter] = useState([]);
+  const filterRef = useRef();
 
   const authHeader = {
     headers: {
@@ -183,18 +189,67 @@ const Projects = () => {
     }
   };
 
-  const searchFunction = () => {
-    if (search.trim() === "") {
-      setFilteredProjects(projects);
-      return;
+  // const searchFunction = () => {
+  //   if (search.trim() === "") {
+  //     setFilteredProjects(projects);
+  //     return;
+  //   }
+
+  //   const result = projects.filter((project) =>
+  //     project.name.toLowerCase().includes(search.toLowerCase())
+  //   );
+
+  //   setFilteredProjects(result);
+  // };
+
+    const applySearchAndFilter = (searchValue, statusValues) => {
+    let data = [...projects];
+
+    // Search
+    if (searchValue.trim() !== "") {
+      data = data.filter((project) =>
+        project.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
     }
 
-    const result = projects.filter((project) =>
-      project.name.toLowerCase().includes(search.toLowerCase())
-    );
+    // Status Filter
+    if (statusValues.length > 0) {
+      data = data.filter((project) =>
+        statusValues.includes(project.status)
+      );
+    }
 
-    setFilteredProjects(result);
+      setFilteredProjects(data);
+    };
+
+    const toggleStatusFilter = (status) => {
+      setStatusFilter((prev) => {
+        const exists = prev.includes(status);
+        const updated = exists
+          ? prev.filter((s) => s !== status)
+          : [...prev, status];
+
+        applySearchAndFilter(search, updated);
+        return updated;
+      });
+    };
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      filterRef.current &&
+      !filterRef.current.contains(event.target)
+    ) {
+      setShowFilter(false); // 👈 close dropdown
+    }
   };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   const clearFunction = () => {
     setSearch("");
@@ -299,13 +354,14 @@ const Projects = () => {
                     const value = e.target.value;
                     setSearch(value);
                     if(value.trim() === "") {
-                        setFilteredProjects(projects);
+                        // setFilteredProjects(projects);
+                        applySearchAndFilter(value, statusFilter);
                     }
                 }
                 }
                 onKeyDown={(e)=> {
                     if(e.key === "Enter"){
-                      searchFunction()
+                      applySearchAndFilter(search, statusFilter);
                     }
                 }
                 }
@@ -323,15 +379,47 @@ const Projects = () => {
                 <button
                 type="button"
                 className="absolute top-1 right-1 rounded-xl h-8 px-3 bg-gray-800 hover:bg-gray-700 text-white"
-                onClick={searchFunction}
+                // onClick={searchFunction}
+                onClick={() => applySearchAndFilter(search, statusFilter)}
               >
                 <SearchIcon />
               </button>
             </div>
 
-            <button  className="rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white">
+            {/* <button  className="rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white">
+              <FilterListIcon />
+            </button> */}
+            <div className="relative" ref={filterRef}>
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className="rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white"
+            >
               <FilterListIcon />
             </button>
+
+            {showFilter && (
+              <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-xl p-4 z-50">
+                <h3 className="font-semibold mb-2">Filter Status</h3>
+                
+                <FormGroup>
+                {["pending", "in-progress", "completed"].map((status) => (
+                  <FormControlLabel key={status} control={<Checkbox checked={statusFilter.includes(status)}
+                      onChange={() => toggleStatusFilter(status)} />} label={status} />
+                ))}
+                 </FormGroup>
+
+                <button
+                  onClick={() => {
+                    setStatusFilter([]);
+                    applySearchAndFilter(search, []);
+                  }}
+                  className="mt-2 w-full bg-gray-100 py-1 rounded-lg hover:bg-gray-200"
+                >
+                  Clear Filter
+                </button>
+              </div>
+            )}
+          </div>
             
           </div>
         </div>

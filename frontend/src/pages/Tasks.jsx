@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import API from '../api/axios';
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, useRef} from 'react';
 import {authManage} from '../context/AuthContext';
 import {Link, useParams} from 'react-router-dom';
 import toast from "react-hot-toast";
@@ -10,6 +10,12 @@ import OfflinePinIcon from '@mui/icons-material/OfflinePin';
 import DonutLargeIcon from '@mui/icons-material/DonutLarge';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from '@mui/icons-material/Close';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 const Tasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -24,6 +30,11 @@ const Tasks = () => {
     const [edit, setEdit] = useState(null);
     const [taskValue, setTaskValue] = useState("");
     const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
+    const [filteredTasks, setFilteredTasks] = useState([]);
+    const [showFilter, setShowFilter] = useState(false);
+    const [statusFilter, setStatusFilter] = useState([]);
+    const filterRef = useRef();
     // const [statusValue, setStatusValue] = useState("");
 
     // const projectNameFunction = async() => {
@@ -50,6 +61,7 @@ const Tasks = () => {
             }
            });
            setTasks(res.data.tasks);
+           setFilteredTasks(res.data.tasks);
            setProjectName(res.data.projectData);
         //    console.log(res.data)
         }
@@ -85,6 +97,7 @@ const Tasks = () => {
             }
         });
         setTasks((prev)=> [...prev, res.data]);
+        setFilteredTasks((prev)=> [...prev, res.data]);
         toast.success("task created successfully");
         setTaskData({
             title:"",
@@ -118,6 +131,7 @@ const Tasks = () => {
             }
         });
         setTasks((prev)=>prev.map((e)=>e._id === edit ? res.data:e));
+        setFilteredTasks((prev)=>prev.map((e)=>e._id === edit ? res.data:e));
         setEdit(null);
     }
     catch(err) {
@@ -141,6 +155,7 @@ const Tasks = () => {
             }
         });
         setTasks((prev)=>prev.map((d)=>d._id === id ? res.data:d));
+        setFilteredTasks((prev)=>prev.map((d)=>d._id === id ? res.data:d));
     }
     catch(err) {
         console.log(err.message);
@@ -159,6 +174,7 @@ const Tasks = () => {
             }
         });
         setTasks((prev)=>prev.filter((d)=>d._id !== id));
+        setFilteredTasks((prev)=>prev.filter((d)=>d._id !== id));
         }
         catch(err) {
         console.log(err.message);
@@ -166,6 +182,61 @@ const Tasks = () => {
     finally {
             setLoading(false);
         }
+    }
+
+    const applySearchAndFilter = (searchValue, statusValues) => {
+    let data = [...tasks];
+    // console.log(data);
+
+    // Search
+    if (searchValue.trim() !== "") {
+      data = data.filter((task) =>
+        task.title.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    }
+
+    // Status Filter
+    if (statusValues.length > 0) {
+      data = data.filter((task) =>
+        statusValues.includes(task.status)
+      );
+    }
+
+      setFilteredTasks(data);
+    };
+
+    const toggleStatusFilter = (status) => {
+      setStatusFilter((prev) => {
+        const exists = prev.includes(status);
+        const updated = exists
+          ? prev.filter((s) => s !== status)
+          : [...prev, status];
+
+        applySearchAndFilter(search, updated);
+        return updated;
+      });
+    };
+
+    useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+        filterRef.current &&
+        !filterRef.current.contains(event.target)
+        ) {
+        setShowFilter(false); // 👈 close dropdown
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+    }, []);
+
+    const clearFunction = () => {
+        setSearch("");
+        setFilteredTasks(tasks);
     }
 
     useEffect(()=>{
@@ -200,14 +271,93 @@ const Tasks = () => {
             </div>
             </div>
             <ul className="w-[40%] flex items-start flex-col">
+                <div className="flex items-center justify-between w-full mb-4">
                 <h2 className="font-semibold text-lg mb-3 capitalize">{`${projectName?.name} Tasks :`}</h2>
+                <div className="flex items-center gap-x-3">
+                <div className="relative">
+                <input
+                    className="rounded-xl h-10 capitalize w-72 ps-2 pe-16"
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSearch(value);
+                        if(value.trim() === "") {
+                            applySearchAndFilter(value, statusFilter);
+                        }
+                    }
+                    }
+                    onKeyDown={(e)=> {
+                        if(e.key === "Enter"){
+                        applySearchAndFilter(search, statusFilter);
+                        }
+                    }
+                    }
+                />
+                {
+                    search.trim() !== "" &&
+                    <button
+                    type="button"
+                    className="absolute top-1 right-12 rounded-xl h-8 px-3 text-gray-800 hover:text-red-600"
+                    onClick={clearFunction} title="Clear"
+                >
+                    <CloseIcon></CloseIcon>
+                </button>
+                }
+                    <button
+                    type="button"
+                    className="absolute top-1 right-1 rounded-xl h-8 px-3 bg-gray-800 hover:bg-gray-700 text-white"
+                    // onClick={searchFunction}
+                    onClick={() => applySearchAndFilter(search, statusFilter)}
+                >
+                    <SearchIcon />
+                </button>
+                </div>
+
+                {/* <button  className="rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white">
+                <FilterListIcon />
+                </button> */}
+                <div className="relative" ref={filterRef}>
+                <button
+                onClick={() => setShowFilter(!showFilter)}
+                className="rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white"
+                >
+                <FilterListIcon />
+                </button>
+
+                {showFilter && (
+                <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-xl p-4 z-50">
+                    <h3 className="font-semibold mb-2">Filter Status</h3>
+                    
+                    <FormGroup>
+                    {["todo", "in-progress", "done"].map((status) => (
+                    <FormControlLabel key={status} control={<Checkbox checked={statusFilter.includes(status)}
+                        onChange={() => toggleStatusFilter(status)} />} label={status} />
+                    ))}
+                    </FormGroup>
+
+                    <button
+                    onClick={() => {
+                        setStatusFilter([]);
+                        applySearchAndFilter(search, []);
+                    }}
+                    className="mt-2 w-full bg-gray-100 py-1 rounded-lg hover:bg-gray-200"
+                    >
+                    Clear Filter
+                    </button>
+                </div>
+                )}
+            </div>
+                
+            </div>
+                </div>
                 {loading?
                 (<div className="flex justify-center items-center h-96 w-full">
                 <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
                 </div>
                 ):
-                (tasks.length > 0?(
-                    tasks.map((data)=>(
+                (filteredTasks.length > 0?(
+                    filteredTasks.map((data)=>(
                         <li key={data._id} className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 rounded-xl
                         ${data.status === "todo" && "bg-red-100/50"}
                         ${data.status === "in-progress" && "bg-yellow-100/50"}
@@ -218,8 +368,11 @@ const Tasks = () => {
                         <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>setEdit(null)}>Cancel</button>
                         <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>submitTaskFun()}>Save</button>
                         </div>):
-                        (<><div className="text-sm font-medium flex items-center gap-x-3">
+                        (<><div className="text-sm font-medium flex flex-col gap-x-3">
                         <p className="text-base font-semibold">{data.title}</p>
+                        <p className="text-xs normal-case text-gray-700">
+                        {data.description}
+                        </p>
                         </div>
                         <div className="flex items-center gap-x-4">
                         <select onChange={(e)=>handleStatus(e.target.value,data._id)} value={data.status} className="rounded-xl h-10 mb-1 w-28 ps-2">
