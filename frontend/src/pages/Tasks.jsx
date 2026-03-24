@@ -25,7 +25,8 @@ const Tasks = () => {
     const [taskData, setTaskData] = useState({
         title : "",
         description : "",
-        status : "todo"
+        status : "todo",
+        deadline : ""
     })
     const [edit, setEdit] = useState(null);
     const [taskValue, setTaskValue] = useState("");
@@ -34,6 +35,7 @@ const Tasks = () => {
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [showFilter, setShowFilter] = useState(false);
     const [statusFilter, setStatusFilter] = useState([]);
+    const [notifiedTasks, setNotifiedTasks] = useState([]);
     const filterRef = useRef();
     // const [statusValue, setStatusValue] = useState("");
 
@@ -87,10 +89,12 @@ const Tasks = () => {
         }
         try {
         setLoading(true);
+        // console.log(taskData);
         const res = await API.post(`/tasks/${projectId}`,{
             title : taskData.title,
             description : taskData.description,
-            status : taskData.status
+            status : taskData.status,
+            deadline : taskData.deadline ? new Date(taskData.deadline) : null
         },{
             headers : {
                 Authorization : `Bearer ${token}`
@@ -98,11 +102,13 @@ const Tasks = () => {
         });
         setTasks((prev)=> [...prev, res.data]);
         setFilteredTasks((prev)=> [...prev, res.data]);
+        // console.log(tasks.deadline);
         toast.success("task created successfully");
         setTaskData({
             title:"",
             description:"",
-            status:"todo"
+            status:"todo",
+            deadline: ""
         })
     }
     catch(err) {
@@ -240,10 +246,34 @@ const Tasks = () => {
     }
 
     useEffect(()=>{
+        if(!tasks.length) return;
+
+        const interval = setInterval(()=>{
+            const now = new Date();
+            tasks.forEach((task)=>{
+                if(task.deadline) {
+                    // console.log(task.title)
+                    const deadline = new Date(task.deadline);
+                    const diff = deadline - now;
+
+                    if(diff > 0 && diff < 3 * 60 * 1000 && !notifiedTasks.includes(task._id)) {
+                        // console.log("deadline")
+                        toast.error(`${task.title} deadline soon!`);
+                        setNotifiedTasks((prev)=>[...prev, task._id]);
+                    }
+                }
+            })
+            // console.log(new Date());
+        },60000);
+        return () => clearInterval(interval);
+    },[tasks]);
+
+    useEffect(()=>{
         if(projectId && token){
         fetchTasks();
         // projectNameFunction();
         }
+        // console.log(tasks);
         // console.log("Project ID:", projectId);
     },[fetchTasks])
 
@@ -260,12 +290,13 @@ const Tasks = () => {
                 <label htmlFor="description" className="mb-1 text-black">Task Description</label>
                 <input name="description" onChange={handleEditValues} value={taskData.description} placeholder="Enter Task Description" className="rounded-xl h-10 mb-1 w-full ps-2" />
                 <label htmlFor="status" className="mb-1 text-black">Task Status</label>
-                <select name="status" onChange={handleEditValues} value={taskData.status} className="rounded-xl h-10 mb-1 w-full ps-2">
+                <select name="status" onChange={handleEditValues} value={taskData.status} className="rounded-xl h-10 mb-1 w-full ps-2 pe-2">
                     <option value="todo">Todo</option>
                     <option value="in-progress">In Progress</option>
                     <option value="done">Done</option>
                 </select>
-                {/* <input name="status" className="rounded-xl h-10 mb-1 w-full ps-2" value={formData.status} onChange={inputFunction} /> */}
+                <label htmlFor="deadline" className="mb-1 text-black">Select Deadline (Optional)</label>
+                <input name="deadline" onChange={handleEditValues} value={taskData.deadline} type="datetime-local" placeholder="Select Deadline" className="rounded-xl h-10 mb-1 w-full ps-2 pe-2" />
                 <button type="submit" className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white w-full">Submit</button>
             </form>
             </div>
@@ -358,10 +389,13 @@ const Tasks = () => {
                 ):
                 (filteredTasks.length > 0?(
                     filteredTasks.map((data)=>(
-                        <li key={data._id} className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 rounded-xl
+                        <li key={data._id} className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 py-2 rounded-xl
                         ${data.status === "todo" && "bg-red-100/50"}
                         ${data.status === "in-progress" && "bg-yellow-100/50"}
                         ${data.status === "done" && "bg-green-100/50"}`}>
+                        <p className={data.deadline?"text-red-600 font-semibold text-xs normal-case text-gray-700 absolute top-1 right-2":"text-green-600 font-semibold text-xs normal-case text-gray-700 absolute top-1 right-2"}>
+                        {(data.deadline && data.status !== "done") && "Deadline On " + new Date(data.deadline).toLocaleString()}
+                        </p>
                         {edit === data._id?
                         (<div className="flex items-center justify-between my-2 w-full">
                         <input className="rounded-xl h-10 mb-1 capitalize w-96 ps-2" value={taskValue} onChange={(e)=>setTaskValue(e.target.value)} />

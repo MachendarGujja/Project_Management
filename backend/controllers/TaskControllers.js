@@ -15,6 +15,7 @@ const CreateTask = async(req,res) => {
             title,
             description,
             status,
+            deadline : req.body.deadline ?? req.body.deadline,
             project : project._id,
             owner : req.user._id
         });

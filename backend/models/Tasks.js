@@ -14,6 +14,10 @@ const TasksSchema = new mongoose.Schema({
         enum : ["todo","in-progress","done"],
         default : "todo"
     },
+    deadline : {
+        type : Date,
+        required : false
+    },
     project : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "Project",
