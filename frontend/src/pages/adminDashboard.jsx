@@ -83,7 +83,7 @@ const adminDashboard = () => {
 
     const createProjectFun = async(e) => {
         e.preventDefault();
-        console.log(formData);
+        // console.log(formData);
         if(formData.name === '' && formData.description === '' && formData.assignTo === '') {
             toast.error("Fil details");
         }
@@ -157,7 +157,7 @@ const adminDashboard = () => {
         <div className="flex items-center justify-between w-[90%]">
         <h2 className="font-bold text-lg mb-4">Active Users :</h2>
         <div>
-        <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>setOpen(true)}>New Project <AddIcon /></button>
+        <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white ps-3.5" onClick={()=>setOpen(true)}>New Project <AddIcon className="!text-2xl mb-0.5" /></button>
         <Modal
             open={open}
             onClose={()=>setOpen(false)}
