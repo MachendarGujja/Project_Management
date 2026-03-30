@@ -4,12 +4,15 @@ import AdminDashboard from './pages/adminDashboard';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Tasks from './pages/Tasks';
+import Header from './pages/Header';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {Toaster} from 'react-hot-toast'; 
 import ProtectedRoutes from './components/ProtectedRoutes';
 import AdminRoute from './components/AdminRoute';
+import {authManage} from './context/AuthContext';
 
 function App() {
+  const {token} = authManage();
   
   return (
     <BrowserRouter>
@@ -25,6 +28,7 @@ function App() {
         minHeight: "40px"
       }
   }}/>
+      {token && <Header></Header>}
       <Routes>
         {/* User Routes */}
         <Route path="/" element={<ProtectedRoutes><Projects /></ProtectedRoutes>} />

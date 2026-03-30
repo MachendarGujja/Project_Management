@@ -278,9 +278,9 @@ const Tasks = () => {
     },[fetchTasks])
 
     return (
-            <div className="h-screen w-full p-10 bg-gray-300 flex items-start justify-around">
-            <div className="h-full w-[40%] flex items-center">
-            <div className="flex flex-col relative w-full items-start p-20 pt-28 bg-gray-400 rounded-xl">
+            <div className="h-screen w-full pt-20 bg-gray-300 flex gap-x-32">
+            <div className="h-full w-[40%] bg-gray-400 flex items-center">
+            <div className="flex flex-col relative w-full items-start p-20 pt-28">
             {user?.role === "admin"?(<Link to={`/admin/users/${userId}/projects/`} className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>):
             (<Link to="/" className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>)}
             <h2 className="font-semibold text-lg mb-3">Create New Task :</h2>
@@ -301,7 +301,7 @@ const Tasks = () => {
             </form>
             </div>
             </div>
-            <ul className="w-[40%] flex items-start flex-col">
+            <div className="w-[45%] flex items-center flex-col pt-6 h-full">
                 <div className="flex items-center justify-between w-full mb-4">
                 <h2 className="font-semibold text-lg mb-3 capitalize">{`${projectName?.name} Tasks :`}</h2>
                 <div className="flex items-center gap-x-3">
@@ -382,8 +382,9 @@ const Tasks = () => {
                 
             </div>
                 </div>
+            <ul className="w-full h-[calc(100dvh_-_180px)] overflow-hidden relative overflow-y-auto pe-16">
                 {loading?
-                (<div className="flex justify-center items-center h-96 w-full">
+                (<div className="flex justify-center items-center h-96 w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
                 </div>
                 ):
@@ -393,7 +394,7 @@ const Tasks = () => {
                         ${data.status === "todo" && "bg-red-100/50"}
                         ${data.status === "in-progress" && "bg-yellow-100/50"}
                         ${data.status === "done" && "bg-green-100/50"}`}>
-                        <p className={data.deadline?"text-red-600 font-semibold text-xs normal-case text-gray-700 absolute top-1 right-2":"text-green-600 font-semibold text-xs normal-case text-gray-700 absolute top-1 right-2"}>
+                        <p className={data.deadline?"text-red-600 font-semibold text-[11px] normal-case text-gray-700 absolute top-[1px] right-2":"text-green-600 font-semibold text-xs normal-case text-gray-700 absolute top-1 right-2"}>
                         {(data.deadline && data.status !== "done") && "Deadline On " + new Date(data.deadline).toLocaleString()}
                         </p>
                         {edit === data._id?
@@ -423,10 +424,11 @@ const Tasks = () => {
                         </li>
                     ))
                 ):(
-                        <p>No Tasks</p>
+                        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-semibold text-xl text-gray-500">No Tasks Found</p>
                     )
                 )}
             </ul>
+            </div>
             </div>
         )
 }

@@ -263,25 +263,25 @@ const Projects = () => {
   }, [token, user, userId]);
 
   return (
-    <div className="h-screen w-full p-10 bg-gray-300 flex items-start justify-around">
-      <div className="h-full w-[40%] flex items-center">
-        <div className="flex flex-col relative w-full items-start p-20 pt-28 bg-gray-400 rounded-xl">
-          {user?.role === "admin" && (
+    <div className="h-screen w-full pt-20 bg-gray-300 flex gap-x-32">
+      <div className="h-full w-[40%] bg-gray-400 flex items-center relative">
+        {user?.role === "admin" && (
             <Link
               to="/admin-dashboard"
-              className="my-4 flex items-center justify-center rounded-xl h-10 px-2"
+              className="my-4 absolute top-4 z-[1] left-4 flex items-center justify-center rounded-xl h-10 px-2"
               title="Back"
             >
               <ArrowBackIosIcon />
               Back
             </Link>
           )}
+        <div className="flex flex-col relative w-full items-start p-20 pt-28">
 
-          <h2 className="absolute top-6 left-4 font-semibold text-lg capitalize">
+          {/* <h2 className="absolute top-6 left-4 font-semibold text-lg capitalize">
             Welcome {user?.name}
-          </h2>
+          </h2> */}
 
-          {user?.role === "user" && (
+          {/* {user?.role === "user" && (
             <button
               className="my-4 absolute top-1 right-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white"
               title="Logout"
@@ -289,7 +289,7 @@ const Projects = () => {
             >
               <LogoutIcon />
             </button>
-          )}
+          )} */}
 
           <h2 className="font-semibold text-lg mb-3">Create New Project :</h2>
 
@@ -339,8 +339,8 @@ const Projects = () => {
           </form>
         </div>
       </div>
-
-      <ul className="w-[40%] flex items-start flex-col">
+      
+      <div className="w-[45%] flex items-center pt-6 h-full flex-col">
         <div className="flex items-center justify-between w-full mb-4">
           <h2 className="font-semibold text-lg mb-3">Projects :</h2>
 
@@ -423,9 +423,10 @@ const Projects = () => {
             
           </div>
         </div>
+      <ul className="w-full h-[calc(100dvh_-_180px)] overflow-hidden relative overflow-y-auto pe-16">
 
         {loading?
-        (<div className="flex justify-center items-center h-96 w-full">
+        (<div className="flex justify-center items-center h-96 w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
         </div>
         ):
@@ -562,9 +563,10 @@ const Projects = () => {
             </li>
           ))
         ) : (
-          <p>No Project</p>
+          <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-semibold text-xl text-gray-500">No Projects Found</p>
         ))}
       </ul>
+      </div>
     </div>
   );
 };

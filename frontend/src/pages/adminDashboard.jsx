@@ -117,11 +117,11 @@ const adminDashboard = () => {
     },[fetchUsers])
 
     return (
-        <div className="h-screen w-screen flex items-start gap-x-10">
+        <div className="h-screen pt-20 w-screen flex items-start gap-x-10">
         <div className="w-[50%] p-6 py-10 bg-gray-100 h-full">
         <div className="flex items-center justify-between w-full mb-4">
-        <h2 className="font-bold text-lg mb-4">Welcome Admin : {user?.name.split(" ")[0]}</h2>
-        <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" title="Logout" onClick={logoutFn}><LogoutIcon /></button>
+        <h2 className="font-bold text-lg mb-4">Performance Analytics</h2>
+        {/* <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" title="Logout" onClick={logoutFn}><LogoutIcon /></button> */}
         </div>
         <div className="grid grid-cols-2 gap-4">
             <div className="border-2 border-solid border-gray-300 p-3 rounded-xl">
