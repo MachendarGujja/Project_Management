@@ -124,7 +124,7 @@ const adminDashboard = () => {
         {/* <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" title="Logout" onClick={logoutFn}><LogoutIcon /></button> */}
         </div>
         <div className="grid grid-cols-2 gap-4">
-            <div className="border-2 border-solid border-gray-300 p-3 rounded-xl">
+            <div className="bg-gray-200 p-3 rounded-xl">
                 <h3 className="font-semibold text-base mb-3">Total Projects Completed : {projectsCount.filter((s)=>s.status === "completed").length}/{projectsCount.length}</h3>
                 <PieChart
                 series={[
@@ -140,7 +140,7 @@ const adminDashboard = () => {
                 height={200}
                 />
             </div>
-            <div className="border-2 border-solid border-gray-300 p-3 rounded-xl">
+            <div className="bg-gray-200 p-3 rounded-xl">
                 <h3 className="font-semibold text-base mb-3">Total Tasks Completed : {tasksCount.filter((s)=>s.status === 'done').length}/{tasksCount.length}</h3>
                  <PieChart
                 series={[{ innerRadius: 50, outerRadius: 100, data : [
@@ -155,7 +155,7 @@ const adminDashboard = () => {
         </div>
         <div className="w-[50%] p-6 py-10">
         <div className="flex items-center justify-between w-[90%]">
-        <h2 className="font-bold text-lg mb-4">Active Users :</h2>
+        <h2 className="font-bold text-lg">Active Users :</h2>
         <div>
         <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white ps-3.5" onClick={()=>setOpen(true)}>New Project <AddIcon className="!text-2xl mb-0.5" /></button>
         <Modal

@@ -3,7 +3,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const Header = () => {
     const {user, logoutFn} = authManage();
     return (
-        <div className="fixed top-0 w-full h-20 z-10 bg-[#ebebeb] border-b border-solid border-gray-300 flex justify-between items-center">
+        <div className="fixed top-0 w-full h-20 z-10 bg-[#334155] text-[#F1F5F9] shadow-lg flex justify-between items-center">
         <div className="flex items-center justify-between w-full px-4">
             <p className="font-semibold text-xl">Project Management</p>
             <div className="flex items-center gap-x-4">

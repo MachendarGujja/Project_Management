@@ -278,36 +278,36 @@ const Tasks = () => {
     },[fetchTasks])
 
     return (
-            <div className="h-screen w-full pt-20 bg-gray-300 flex gap-x-32">
-            <div className="h-full w-[40%] bg-gray-400 flex items-center">
+            <div className="h-screen w-full pt-20 bg-white flex gap-x-32">
+            <div className="h-full w-[40%] bg-gray-100 flex items-center">
             <div className="flex flex-col relative w-full items-start p-20 pt-28">
             {user?.role === "admin"?(<Link to={`/admin/users/${userId}/projects/`} className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>):
             (<Link to="/" className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>)}
             <h2 className="font-semibold text-lg mb-3">Create New Task :</h2>
             <form onSubmit={TaskSubmitFunction} className="flex flex-col w-full">
                 <label htmlFor="title" className="mb-1 text-black">Task Title</label>
-                <input name="title" onChange={handleEditValues} value={taskData.title} placeholder="Enter Task Title" className="rounded-xl h-10 mb-1 w-full ps-2" />
+                <input name="title" onChange={handleEditValues} value={taskData.title} placeholder="Enter Task Title" className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400" />
                 <label htmlFor="description" className="mb-1 text-black">Task Description</label>
-                <input name="description" onChange={handleEditValues} value={taskData.description} placeholder="Enter Task Description" className="rounded-xl h-10 mb-1 w-full ps-2" />
+                <input name="description" onChange={handleEditValues} value={taskData.description} placeholder="Enter Task Description" className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400" />
                 <label htmlFor="status" className="mb-1 text-black">Task Status</label>
-                <select name="status" onChange={handleEditValues} value={taskData.status} className="rounded-xl h-10 mb-1 w-full ps-2 pe-2">
+                <select name="status" onChange={handleEditValues} value={taskData.status} className="rounded-xl h-10 mb-1 w-full ps-2 pe-2 border border-solid border-gray-400">
                     <option value="todo">Todo</option>
                     <option value="in-progress">In Progress</option>
                     <option value="done">Done</option>
                 </select>
                 <label htmlFor="deadline" className="mb-1 text-black">Select Deadline (Optional)</label>
-                <input name="deadline" onChange={handleEditValues} value={taskData.deadline} type="datetime-local" placeholder="Select Deadline" className="rounded-xl h-10 mb-1 w-full ps-2 pe-2" />
+                <input name="deadline" onChange={handleEditValues} value={taskData.deadline} type="datetime-local" placeholder="Select Deadline" className="rounded-xl h-10 mb-1 w-full ps-2 pe-2 border border-solid border-gray-400" />
                 <button type="submit" className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white w-full">Submit</button>
             </form>
             </div>
             </div>
             <div className="w-[45%] flex items-center flex-col pt-6 h-full">
-                <div className="flex items-center justify-between w-full mb-4">
+                <div className="flex items-center justify-between w-full mb-4 pe-8">
                 <h2 className="font-semibold text-lg mb-3 capitalize">{`${projectName?.name} Tasks :`}</h2>
                 <div className="flex items-center gap-x-3">
                 <div className="relative">
                 <input
-                    className="rounded-xl h-10 capitalize w-72 ps-2 pe-16"
+                    className="rounded-xl h-10 capitalize w-72 ps-2 pe-16 border border-solid border-gray-400"
                     placeholder="Search"
                     value={search}
                     onChange={(e) => {
@@ -357,7 +357,7 @@ const Tasks = () => {
                 </button>
 
                 {showFilter && (
-                <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-xl p-4 z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-xl p-4 z-50 border border-solid border-gray-200">
                     <h3 className="font-semibold mb-2">Filter Status</h3>
                     
                     <FormGroup>
@@ -390,7 +390,7 @@ const Tasks = () => {
                 ):
                 (filteredTasks.length > 0?(
                     filteredTasks.map((data)=>(
-                        <li key={data._id} className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 py-2 rounded-xl
+                        <li key={data._id} className={`flex items-center justify-between capitalize border border-solid border-gray-200 shadow-md relative mb-4 w-full px-4 pt-2 rounded-xl
                         ${data.status === "todo" && "bg-red-100/50"}
                         ${data.status === "in-progress" && "bg-yellow-100/50"}
                         ${data.status === "done" && "bg-green-100/50"}`}>
@@ -398,19 +398,21 @@ const Tasks = () => {
                         {(data.deadline && data.status !== "done") && "Deadline On " + new Date(data.deadline).toLocaleString()}
                         </p>
                         {edit === data._id?
-                        (<div className="flex items-center justify-between my-2 w-full">
-                        <input className="rounded-xl h-10 mb-1 capitalize w-96 ps-2" value={taskValue} onChange={(e)=>setTaskValue(e.target.value)} />
-                        <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>setEdit(null)}>Cancel</button>
-                        <button className="my-4 rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>submitTaskFun()}>Save</button>
+                        (<div className="flex items-center justify-between my-2 py-1 w-full">
+                        <input className="rounded-xl h-10 mb-1 capitalize w-96 ps-2 border border-solid border-gray-300" value={taskValue} onChange={(e)=>setTaskValue(e.target.value)} />
+                        <div className="flex gap-x-4">
+                        <button className="rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>setEdit(null)}>Cancel</button>
+                        <button className="rounded-xl h-10 px-3 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>submitTaskFun()}>Save</button>
+                        </div>
                         </div>):
                         (<><div className="text-sm font-medium flex flex-col gap-x-3">
-                        <p className="text-base font-semibold">{data.title}</p>
-                        <p className="text-xs normal-case text-gray-700">
+                        <p className="text-base font-semibold line-clamp-1 w-[250px]">{data.title}</p>
+                        <p className="text-xs normal-case text-gray-700 line-clamp-1 w-[250px]">
                         {data.description}
                         </p>
                         </div>
                         <div className="flex items-center gap-x-4">
-                        <select onChange={(e)=>handleStatus(e.target.value,data._id)} value={data.status} className="rounded-xl h-10 mb-1 w-28 ps-2">
+                        <select onChange={(e)=>handleStatus(e.target.value,data._id)} value={data.status} className="rounded-xl h-10 mb-1 w-28 ps-2 border border-solid border-gray-300">
                             <option value="todo">Todo</option>
                             <option value="in-progress">In Progress</option>
                             <option value="done">Done</option>

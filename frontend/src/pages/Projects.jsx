@@ -263,8 +263,8 @@ const Projects = () => {
   }, [token, user, userId]);
 
   return (
-    <div className="h-screen w-full pt-20 bg-gray-300 flex gap-x-32">
-      <div className="h-full w-[40%] bg-gray-400 flex items-center relative">
+    <div className="h-screen w-full pt-20 bg-white flex gap-x-32">
+      <div className="h-full w-[40%] bg-gray-100 flex items-center relative">
         {user?.role === "admin" && (
             <Link
               to="/admin-dashboard"
@@ -300,7 +300,7 @@ const Projects = () => {
             <input
               name="name"
               placeholder="Enter Project Name"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.name}
               onChange={inputFunction}
             />
@@ -311,7 +311,7 @@ const Projects = () => {
             <input
               name="description"
               placeholder="Enter Project Description"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.description}
               onChange={inputFunction}
             />
@@ -321,7 +321,7 @@ const Projects = () => {
             </label>
             <select
               name="status"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.status}
               onChange={inputFunction}
             >
@@ -341,13 +341,13 @@ const Projects = () => {
       </div>
       
       <div className="w-[45%] flex items-center pt-6 h-full flex-col">
-        <div className="flex items-center justify-between w-full mb-4">
+        <div className="flex items-center justify-between w-full mb-4 pe-8">
           <h2 className="font-semibold text-lg mb-3">Projects :</h2>
 
           <div className="flex items-center gap-x-3">
             <div className="relative">
               <input
-                className="rounded-xl h-10 capitalize w-72 ps-2 pe-16"
+                className="rounded-xl h-10 capitalize w-72 ps-2 pe-16 border border-solid border-gray-400"
                 placeholder="Search"
                 value={search}
                 onChange={(e) => {
@@ -398,7 +398,7 @@ const Projects = () => {
             </button>
 
             {showFilter && (
-              <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-xl p-4 z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg border border-solid border-gray-200 rounded-xl p-4 z-50">
                 <h3 className="font-semibold mb-2">Filter Status</h3>
                 
                 <FormGroup>
@@ -434,7 +434,7 @@ const Projects = () => {
           filteredProjects.map((data) => (
             <li
               key={data._id}
-              className={`flex items-center justify-between capitalize relative mb-2 w-full px-4 rounded-xl
+              className={`flex items-center justify-between capitalize border border-solid border-gray-200 shadow-md relative mb-4 w-full px-4 rounded-xl
               ${data.status === "pending" && "bg-red-100/50"}
               ${data.status === "in-progress" && "bg-yellow-100/50"}
               ${data.status === "completed" && "bg-green-100/50"}`}
@@ -442,21 +442,21 @@ const Projects = () => {
               {edit === data._id ? (
                 <div className="flex flex-col gap-2 my-3 w-full">
                   <input
-                    className="rounded-xl h-10 capitalize w-full ps-2"
+                    className="rounded-xl h-10 capitalize w-full ps-2 border border-solid border-gray-300"
                     value={editname}
                     onChange={(e) => setEditName(e.target.value)}
                     placeholder="Project name"
                   />
 
                   <input
-                    className="rounded-xl h-10 w-full ps-2"
+                    className="rounded-xl h-10 w-full ps-2 border border-solid border-gray-300"
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     placeholder="Project description"
                   />
 
                   <select
-                    className="rounded-xl h-10 w-full ps-2"
+                    className="rounded-xl h-10 w-full ps-2 border border-solid border-gray-300"
                     value={editStatus}
                     onChange={(e) => setEditStatus(e.target.value)}
                   >
@@ -484,8 +484,8 @@ const Projects = () => {
                 <>
                   <div className="text-sm font-medium flex items-center gap-x-3">
                     <div>
-                      <p className="text-base font-semibold">{data.name}</p>
-                      <p className="text-xs normal-case text-gray-700">
+                      <p className="text-base font-semibold line-clamp-1 w-[220px]">{data.name}</p>
+                      <p className="text-xs normal-case text-gray-700 line-clamp-1 w-[220px]">
                         {data.description}
                       </p>
                     </div>
@@ -513,7 +513,7 @@ const Projects = () => {
                     )}
 
                     <select
-                      className="rounded-xl h-10 mb-1 w-28 ps-2"
+                      className="rounded-xl h-10 mb-1 w-28 ps-2 border border-solid border-gray-300"
                       value={data.status}
                       onChange={(e) =>
                         handlingStatus(data._id, e.target.value)
