@@ -49,30 +49,30 @@ const Signup = () => {
     }
 
     return (
-        <div className="h-screen w-screen bg-gray-300 flex flex-col items-center justify-center">
+        <div className="h-screen w-screen bg-[#e9f1f8] flex flex-col items-center justify-center">
             {loading?
             (<div className="flex justify-center items-center h-96 w-full">
             <div className="h-10 w-10 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
             </div>
             )
             :(<>
-            <h3 className="pb-4 text-2xl font-semibold">Project Management</h3>
+            <h3 className="pb-4 text-2xl font-bold">Project Management</h3>
             <div className="flex flex-col items-start">
-                <h3 className="pb-3 text-lg font-semibold">SignUp</h3>
-            <form onSubmit={submitFunction} className="flex p-6 flex-col bg-gray-400 rounded-xl w-[500px]">
-                <label htmlFor="name" className="mb-1 text-black">User Name</label>
-                <input name="name" className="rounded-xl h-11 mb-3 w-full ps-2" placeholder="Enter Name" onChange={inputFunction} />
-                <label htmlFor="role" className="mb-1 text-black">Select Role</label>
-                <select name="role" className="rounded-xl h-11 mb-3 w-full ps-2" value={user.role} onChange={inputFunction}>
+                <h3 className="pb-3 text-lg font-semibold">Create an account</h3>
+            <form onSubmit={submitFunction} className="flex p-6 flex-col bg-[#eff3f7] border border-solid border-gray-300 shadow-lg rounded-xl w-[500px]">
+                <label htmlFor="name" className="mb-1 text-black font-medium">User Name</label>
+                <input name="name" className="rounded-xl h-11 mb-3 w-full ps-2 border border-solid border-gray-400" placeholder="Enter Name" onChange={inputFunction} />
+                <label htmlFor="role" className="mb-1 text-black font-medium">Select Role</label>
+                <select name="role" className="rounded-xl h-11 mb-3 w-full ps-2 border border-solid border-gray-400" value={user.role} onChange={inputFunction}>
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                 </select>
-                <label htmlFor="email" className="mb-1 text-black">Email</label>
-                <input name="email" className="rounded-xl h-10 mb-3 w-full ps-2" placeholder="Enter Email" onChange={inputFunction} />
-                <label htmlFor="password" className="mb-1 text-black">Password</label>
-                <div className="relative"><input name="password" className="rounded-xl h-10 mb-3 w-full ps-2 pe-12" type={showPswd?"text":"password"} placeholder="Enter Password" onChange={inputFunction} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowPswd(!showPswd)}>{showPswd?<VisibilityIcon />:<VisibilityOffIcon />}</button></div>
-                <label htmlFor="repassword" className="mb-1 text-black">Re-Enter Password</label>
-                <div className="relative"><input name="repassword" className="rounded-xl h-10 mb-3 w-full ps-2 pe-12" type={showRePswd?"text":"password"} placeholder="Re-Enter Password" onChange={(e)=>setRepassword(e.target.value)} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowRePswd(!showRePswd)}>{showRePswd?<VisibilityIcon />:<VisibilityOffIcon />}</button></div>
+                <label htmlFor="email" className="mb-1 text-black font-medium">Email</label>
+                <input name="email" className="rounded-xl h-10 mb-3 w-full ps-2 border border-solid border-gray-400" placeholder="Enter Email" onChange={inputFunction} />
+                <label htmlFor="password" className="mb-1 text-black font-medium">Password</label>
+                <div className="relative"><input name="password" className="rounded-xl h-10 mb-3 w-full ps-2 pe-12 border border-solid border-gray-400" type={showPswd?"text":"password"} placeholder="Enter Password" onChange={inputFunction} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowPswd(!showPswd)}>{showPswd?<VisibilityIcon />:<VisibilityOffIcon />}</button></div>
+                <label htmlFor="repassword" className="mb-1 text-black font-medium">Re-Enter Password</label>
+                <div className="relative"><input name="repassword" className="rounded-xl h-10 mb-3 w-full ps-2 pe-12 border border-solid border-gray-400" type={showRePswd?"text":"password"} placeholder="Re-Enter Password" onChange={(e)=>setRepassword(e.target.value)} /><button type="button" className="absolute top-1.5 right-3" onClick={()=>setShowRePswd(!showRePswd)}>{showRePswd?<VisibilityIcon />:<VisibilityOffIcon />}</button></div>
                 <button type="submit" className="rounded-xl mt-1 h-10 w-full bg-gray-800 hover:bg-gray-700 text-white mb-1">Submit</button>
                 <p>Already have an account? <Link to="/login" className="text-black hover:text-gray-700 font-semibold underline w-fit">Login</Link></p>
             </form>

@@ -279,23 +279,23 @@ const Tasks = () => {
 
     return (
             <div className="h-screen w-full pt-20 bg-white flex gap-x-32">
-            <div className="h-full w-[40%] bg-gray-100 flex items-center">
+            <div className="h-full w-[40%] bg-[#F1F5F9] flex items-center">
             <div className="flex flex-col relative w-full items-start p-20 pt-28">
             {user?.role === "admin"?(<Link to={`/admin/users/${userId}/projects/`} className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>):
             (<Link to="/" className="my-4 absolute top-1 left-4 flex items-center justify-center rounded-xl h-10 px-2" title="Back"><ArrowBackIosIcon />Back</Link>)}
             <h2 className="font-semibold text-lg mb-3">Create New Task :</h2>
             <form onSubmit={TaskSubmitFunction} className="flex flex-col w-full">
-                <label htmlFor="title" className="mb-1 text-black">Task Title</label>
+                <label htmlFor="title" className="mb-1 text-black font-medium">Task Title</label>
                 <input name="title" onChange={handleEditValues} value={taskData.title} placeholder="Enter Task Title" className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400" />
-                <label htmlFor="description" className="mb-1 text-black">Task Description</label>
+                <label htmlFor="description" className="mb-1 text-black font-medium">Task Description</label>
                 <input name="description" onChange={handleEditValues} value={taskData.description} placeholder="Enter Task Description" className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400" />
-                <label htmlFor="status" className="mb-1 text-black">Task Status</label>
+                <label htmlFor="status" className="mb-1 text-black font-medium">Task Status</label>
                 <select name="status" onChange={handleEditValues} value={taskData.status} className="rounded-xl h-10 mb-1 w-full ps-2 pe-2 border border-solid border-gray-400">
                     <option value="todo">Todo</option>
                     <option value="in-progress">In Progress</option>
                     <option value="done">Done</option>
                 </select>
-                <label htmlFor="deadline" className="mb-1 text-black">Select Deadline (Optional)</label>
+                <label htmlFor="deadline" className="mb-1 text-black font-medium">Select Deadline (Optional)</label>
                 <input name="deadline" onChange={handleEditValues} value={taskData.deadline} type="datetime-local" placeholder="Select Deadline" className="rounded-xl h-10 mb-1 w-full ps-2 pe-2 border border-solid border-gray-400" />
                 <button type="submit" className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white w-full">Submit</button>
             </form>
@@ -420,9 +420,9 @@ const Tasks = () => {
                         <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" onClick={()=>handleEditFun(data)} title="Edit"><ModeEditOutlineIcon /></button>
                         <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" title="Delete" onClick={()=>handleDeleteFun(data._id)}><DeleteIcon /></button>
                         </div></>)
-                        }<div className="absolute -right-10 top-5">{data.status === 'done' && <OfflinePinIcon fontSize="large" className="text-green-800" />}
-                        {data.status === 'in-progress' && <DonutLargeIcon fontSize="large" className="text-yellow-600" />}
-                        {data.status === 'todo' && <WorkHistoryIcon fontSize="large" className="text-orange-800" />}</div>
+                        }<div className="absolute -right-10 top-5">{data.status === 'done' && <OfflinePinIcon fontSize="medium" className="text-green-800" />}
+                        {data.status === 'in-progress' && <DonutLargeIcon fontSize="medium" className="text-yellow-600" />}
+                        {data.status === 'todo' && <WorkHistoryIcon fontSize="medium" className="text-orange-800" />}</div>
                         </li>
                     ))
                 ):(

@@ -264,7 +264,7 @@ const Projects = () => {
 
   return (
     <div className="h-screen w-full pt-20 bg-white flex gap-x-32">
-      <div className="h-full w-[40%] bg-gray-100 flex items-center relative">
+      <div className="h-full w-[40%] bg-[#F1F5F9] flex items-center relative">
         {user?.role === "admin" && (
             <Link
               to="/admin-dashboard"
@@ -294,7 +294,7 @@ const Projects = () => {
           <h2 className="font-semibold text-lg mb-3">Create New Project :</h2>
 
           <form onSubmit={submitFunction} className="flex flex-col w-full">
-            <label htmlFor="name" className="mb-1 text-black">
+            <label htmlFor="name" className="mb-1 text-black font-medium">
               Project Name
             </label>
             <input
@@ -305,7 +305,7 @@ const Projects = () => {
               onChange={inputFunction}
             />
 
-            <label htmlFor="description" className="mb-1 text-black">
+            <label htmlFor="description" className="mb-1 text-black font-medium">
               Project Description
             </label>
             <input
@@ -316,7 +316,7 @@ const Projects = () => {
               onChange={inputFunction}
             />
 
-            <label htmlFor="status" className="mb-1 text-black">
+            <label htmlFor="status" className="mb-1 text-black font-medium">
               Project Status
             </label>
             <select
@@ -545,17 +545,17 @@ const Projects = () => {
 
               <div className="absolute -right-10 top-5">
                 {data.status === "completed" && (
-                  <OfflinePinIcon fontSize="large" className="text-green-800" />
+                  <OfflinePinIcon fontSize="medium" className="text-green-800" />
                 )}
                 {data.status === "in-progress" && (
                   <DonutLargeIcon
-                    fontSize="large"
+                    fontSize="medium"
                     className="text-yellow-600"
                   />
                 )}
                 {data.status === "pending" && (
                   <WorkHistoryIcon
-                    fontSize="large"
+                    fontSize="medium"
                     className="text-orange-800"
                   />
                 )}

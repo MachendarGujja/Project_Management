@@ -50,7 +50,7 @@ const adminDashboard = () => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 600,
-        bgcolor: '#d9d9d9',
+        bgcolor: '#e9f1f8',
         border: '1px solid #7c7c7cff',
         borderRadius: '10px',
         boxShadow: 24,
@@ -118,13 +118,13 @@ const adminDashboard = () => {
 
     return (
         <div className="h-screen pt-20 w-screen flex items-start gap-x-10">
-        <div className="w-[50%] p-6 py-10 bg-gray-100 h-full">
+        <div className="w-[50%] p-6 py-10 bg-[#F1F5F9] h-full">
         <div className="flex items-center justify-between w-full mb-4">
-        <h2 className="font-bold text-lg mb-4">Performance Analytics</h2>
+        <h2 className="font-bold text-lg mb-4">Productivity Insights</h2>
         {/* <button className="my-4 rounded-xl h-10 px-2 bg-gray-800 hover:bg-gray-700 text-white" title="Logout" onClick={logoutFn}><LogoutIcon /></button> */}
         </div>
         <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-200 p-3 rounded-xl">
+            <div className="border border-solid border-gray-400/50 p-3 rounded-xl">
                 <h3 className="font-semibold text-base mb-3">Total Projects Completed : {projectsCount.filter((s)=>s.status === "completed").length}/{projectsCount.length}</h3>
                 <PieChart
                 series={[
@@ -140,7 +140,7 @@ const adminDashboard = () => {
                 height={200}
                 />
             </div>
-            <div className="bg-gray-200 p-3 rounded-xl">
+            <div className="border border-solid border-gray-400/50 p-3 rounded-xl">
                 <h3 className="font-semibold text-base mb-3">Total Tasks Completed : {tasksCount.filter((s)=>s.status === 'done').length}/{tasksCount.length}</h3>
                  <PieChart
                 series={[{ innerRadius: 50, outerRadius: 100, data : [
@@ -172,34 +172,34 @@ const adminDashboard = () => {
             </div>
             ):(
           <form onSubmit={createProjectFun}  className="flex flex-col w-full">
-            <label htmlFor="name" className="mb-1 text-black">
+            <label htmlFor="name" className="mb-1 text-black font-medium">
               Project Name
             </label>
             <input
               name="name"
               placeholder="Enter Project Name"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.name}
               onChange={inputFunction}
             />
 
-            <label htmlFor="description" className="mb-1 text-black">
+            <label htmlFor="description" className="mb-1 text-black font-medium">
               Project Description
             </label>
             <input
               name="description"
               placeholder="Enter Project Description"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.description}
               onChange={inputFunction}
             />
 
-            <label htmlFor="status" className="mb-1 text-black">
+            <label htmlFor="status" className="mb-1 text-black font-medium">
               Project Status
             </label>
             <select
               name="status"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.status}
               onChange={inputFunction}
             >
@@ -207,12 +207,12 @@ const adminDashboard = () => {
               <option value="in-progress">In Progress</option>
               <option value="completed">Completed</option>
             </select>
-            <label htmlFor="assignTo" className="mb-1 text-black">
+            <label htmlFor="assignTo" className="mb-1 text-black font-medium">
               Assign To
             </label>
             <select
               name="assignTo"
-              className="rounded-xl h-10 mb-1 w-full ps-2"
+              className="rounded-xl h-10 mb-1 w-full ps-2 border border-solid border-gray-400"
               value={formData.assignTo}
               onChange={inputFunction}
             >
@@ -248,8 +248,8 @@ const adminDashboard = () => {
         (userlist.length === 0?
         (<div className="font-semibold text-lg text-center">No Users</div>):
         (<>{userlist.map((data) => 
-        <div key={data._id} className="text-sm my-3 h-16 bg-green-200 p-3 w-[90%] rounded-xl">
-            <Link to={`/admin/users/${data._id}/projects`} className="p-1.5 font-medium flex items-center justify-between gap-x-3">
+        <div key={data._id} className="text-sm mt-3 mb-4 h-16 bg-[#dbe6f0] hover:bg-[#d2e0ed] p-2 w-[90%] rounded-xl flex items-center justify-between">
+            <Link to={`/admin/users/${data._id}/projects`} className="p-1.5 font-medium w-full flex items-center justify-between gap-x-3">
             <p className="text-base font-semibold capitalize ps-4">{data.name}</p>
             <ArrowForwardIosIcon className="text-gray-700" />
             </Link>
